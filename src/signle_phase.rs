@@ -6,7 +6,7 @@ pub mod single_phase_line {
         pub id: f64,        // pipe inside diameter [m]
         pub w: f64,         // liquid flow rate [kg/hr]
         pub e: f64,         // pipe roughness [m]
-        pub fD: f64,        // Darcy Friction Factor [-]
+        pub fdarcy: f64,        // Darcy Friction Factor [-]
         pub sf: f64,        // safety factor [-]
     }
 }
