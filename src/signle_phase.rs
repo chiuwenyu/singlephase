@@ -38,7 +38,7 @@ pub mod single_phase_line {
 
         pub fn velocity(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
-            if (self.rho * self.id != 0.0) {
+            if self.rho * self.id != 0.0 {
                 self.v = self.w / self.rho / (PI / 4.0 * self.id * self.id ) / 3600.0;
                 ret = Ok(self.v);
             }
@@ -50,8 +50,8 @@ pub mod single_phase_line {
 
         pub fn reynold_num(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
-            if (self.rho * self.id * self.mu != 0.0) {
-                self.velocity();
+            if self.rho * self.id * self.mu != 0.0 {
+                self.velocity().expect("velocity calculation error");
                 self.nre = self.rho * self.v * self.id / self.mu;
                 ret = Ok(self.nre);
             }
