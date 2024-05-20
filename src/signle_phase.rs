@@ -48,5 +48,19 @@ pub mod single_phase_line {
             return ret;
         }
 
+        pub fn reynold_num(&mut self) -> Result<f64, &'static str> {
+            let ret: Result<f64, &'static str>;
+            if (self.rho * self.id * self.mu != 0.0) {
+                self.velocity();
+                self.nre = self.rho * self.v * self.id / self.mu;
+                ret = Ok(self.nre);
+            }
+            else {
+                ret = Err("ZeroDivisionError: division by zero caused rho, id or mu");
+            }
+            return ret;
+        }
+
+
     }
 }
