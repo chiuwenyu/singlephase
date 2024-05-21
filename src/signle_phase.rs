@@ -73,11 +73,11 @@ pub mod single_phase_line {
                     self.fdarcy = 64.0 / self.nre;
                 } else {    // turbulent flow
                     // Churchill equation
-                    let c:f64 = (7.0 / self.nre).fpow(0.9) + 0.27 * self.e / self.id;
-                    let a:f64 = (2.457 * c.ln()).fpow(16.0);
-                    let b:f64 = (37530.0 / self.nre).fpow(16.0);
-                    let term = (8.0 / self.nre).fpow(12.0) + 1.0 / (a+b).fpow(1.5);
-                    let fan = 2.0 * term.fpow(1.0/12.0);    // fan: Fanning Friction Factor
+                    let c:f64 = (7.0 / self.nre).powf(0.9) + 0.27 * self.e / self.id;
+                    let a:f64 = (2.457 * c.ln()).powf(16.0);
+                    let b:f64 = (37530.0 / self.nre).powf(16.0);
+                    let term = (8.0 / self.nre).powf(12.0) + 1.0 / (a+b).powf(1.5);
+                    let fan = 2.0 * term.powf(1.0/12.0);    // fan: Fanning Friction Factor
                     self.fdarcy = 4.0 * fan;
                 }
                 ret = Ok(self.fdarcy);
