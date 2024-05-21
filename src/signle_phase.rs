@@ -36,6 +36,7 @@ pub mod single_phase_line {
             }
         }
 
+
         pub fn velocity(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
             if self.rho * self.id != 0.0 {
@@ -47,6 +48,7 @@ pub mod single_phase_line {
             }
             return ret;
         }
+
 
         pub fn reynold_num(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
@@ -61,6 +63,30 @@ pub mod single_phase_line {
             return ret;
         }
 
+
+        pub fn darcy_friction_factor(&mut self) -> Result<f64, &'static str> {
+            let ret: Result<f64, &'static str>;
+            if self.rho * self.id * self.mu != 0.0 {
+                self.velocity().expect("velocity calculation error");
+                self.reynold_num().expect("Reynold Number calculation error");
+                if self.nre <= 2300.0 {     // laminar flow
+                    self.fdarcy = 64.0 / self.nre;
+                } else {    // turbulent flow
+                    // Churchill equation
+                    let c:f64 = (7.0 / self.nre).fpow(0.9) + 0.27 * self.e / self.id;
+                    let a:f64 = (2.457 * c.ln()).fpow(16.0);
+                    let b:f64 = (37530.0 / self.nre).fpow(16.0);
+                    let term = (8.0 / self.nre).fpow(12.0) + 1.0 / (a+b).fpow(1.5);
+                    let fan = 2.0 * term.fpow(1.0/12.0);    // fan: Fanning Friction Factor
+                    self.fdarcy = 4.0 * fan;
+                }
+                ret = Ok(self.fdarcy);
+            }
+            else {
+                ret = Err("ZeroDivisionError: division by zero caused darcy_friction_factor");
+            }
+            return ret;
+        }
 
     }
 }
