@@ -106,5 +106,17 @@ pub mod single_phase_line {
             return ret;
         }
 
+        pub fn velocity_head(&mut self) -> Result<f64, &'static str> {
+            let ret: Result<f64, &'static str>;
+            if self.rho * self.id * self.mu != 0.0 {
+                self.velocity().expect("velocity calculation error");
+                self.vh = self.rho * self.v * self.v / 2.0;
+                ret = Ok(self.vh);
+            }
+            else {
+                ret = Err("ZeroDivisionError: division by zero caused velocity_head fn");
+            }
+            return ret;
+        }
     }
 }
