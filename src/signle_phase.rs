@@ -1,4 +1,5 @@
-
+#![allow(dead_code)]
+#![allow(unused_variables)]
 pub mod single_phase_line {
     use std::f64::consts::PI;
 
@@ -27,7 +28,7 @@ pub mod single_phase_line {
                 mu,
                 id,
                 e,
-                sf,
+                sf: 1.2,
                 v: -999.0,
                 nre: -999.0,
                 fdarcy: -999.0,
@@ -83,7 +84,24 @@ pub mod single_phase_line {
                 ret = Ok(self.fdarcy);
             }
             else {
-                ret = Err("ZeroDivisionError: division by zero caused darcy_friction_factor");
+                ret = Err("ZeroDivisionError: division by zero caused darcy_friction_factor fn");
+            }
+            return ret;
+        }
+
+
+        pub fn pressure_drop_100(&mut self) -> Result<f64, &'static str> {
+            let ret: Result<f64, &'static str>;
+            if self.rho * self.id * self.mu != 0.0 {
+                let g = 9.80665;
+                self.darcy_friction_factor().expect("darcy_friction_factor calculation error");
+                self.velocity().expect("velocity calculation error");
+
+                self.dp100 =  self.fdarcy * self.rho * self.v * self.v / (2.0 * g * self.id) / 10000.0 * 100.0 * self.sf;
+                ret = Ok(self.dp100);
+            }
+            else {
+                ret = Err("ZeroDivisionError: division by zero caused pressure_drop_100 fn");
             }
             return ret;
         }
