@@ -28,7 +28,7 @@ pub mod single_phase_line {
                 mu,
                 id,
                 e,
-                sf: 1.2,
+                sf,
                 v: -999.0,
                 nre: -999.0,
                 fdarcy: -999.0,
