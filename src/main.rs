@@ -30,16 +30,13 @@ fn main() {
     let sf = 1.0;         // safety factor
 
     let mut one_line = single_phase_line::SingleFx::new(w, rho, vis, id, e, sf);
+    one_line.hydraulic();
 
     // output
     println!("Act. ID :  {:.2} inch, equal to {:.8} meters", inside_id, id);
-    one_line.velocity();
     println!("Velocity (m/s) : {:.4}", one_line.v);
-    one_line.pressure_drop_100();
     println!("Pressure Drop (Kg/cm^2/100m) : {:.6}", one_line.dp100);
-    one_line.velocity_head();
     println!("1.0 V.H. (Kg/m/s^2) : {:.4}", one_line.vh);
-    one_line.reynold_num();
     println!("Reynold No. [-] : {}", fmt_f64(one_line.nre, 10, 4, 3));
 
 }

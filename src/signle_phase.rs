@@ -38,7 +38,7 @@ pub mod single_phase_line {
         }
 
 
-        pub fn velocity(&mut self) -> Result<f64, &'static str> {
+        fn velocity(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
             if self.rho * self.id != 0.0 {
                 self.v = self.w / self.rho / (PI / 4.0 * self.id * self.id ) / 3600.0;
@@ -51,10 +51,9 @@ pub mod single_phase_line {
         }
 
 
-        pub fn reynold_num(&mut self) -> Result<f64, &'static str> {
+        fn reynold_num(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
             if self.rho * self.id * self.mu != 0.0 {
-                self.velocity().expect("velocity calculation error");
                 self.nre = self.rho * self.v * self.id / self.mu;
                 ret = Ok(self.nre);
             }
@@ -65,11 +64,9 @@ pub mod single_phase_line {
         }
 
 
-        pub fn darcy_friction_factor(&mut self) -> Result<f64, &'static str> {
+        fn darcy_friction_factor(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
             if self.rho * self.id * self.mu != 0.0 {
-                self.velocity().expect("velocity calculation error");
-                self.reynold_num().expect("Reynold Number calculation error");
                 if self.nre <= 2300.0 {     // laminar flow
                     self.fdarcy = 64.0 / self.nre;
                 } else {    // turbulent flow
@@ -90,12 +87,10 @@ pub mod single_phase_line {
         }
 
 
-        pub fn pressure_drop_100(&mut self) -> Result<f64, &'static str> {
+        fn pressure_drop_100(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
             if self.rho * self.id * self.mu != 0.0 {
                 let g = 9.80665;
-                self.darcy_friction_factor().expect("darcy_friction_factor calculation error");
-                self.velocity().expect("velocity calculation error");
 
                 self.dp100 =  self.fdarcy * self.rho * self.v * self.v / (2.0 * g * self.id) / 10000.0 * 100.0 * self.sf;
                 ret = Ok(self.dp100);
@@ -106,10 +101,9 @@ pub mod single_phase_line {
             return ret;
         }
 
-        pub fn velocity_head(&mut self) -> Result<f64, &'static str> {
+        fn velocity_head(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
             if self.rho * self.id * self.mu != 0.0 {
-                self.velocity().expect("velocity calculation error");
                 self.vh = self.rho * self.v * self.v / 2.0;
                 ret = Ok(self.vh);
             }
@@ -117,6 +111,15 @@ pub mod single_phase_line {
                 ret = Err("ZeroDivisionError: division by zero caused velocity_head fn");
             }
             return ret;
+        }
+
+        pub fn hydraulic(&mut self) {
+            let ret: Result<f64, &'static str>;
+            self.velocity().expect("Velocity calculation error");
+            self.reynold_num().expect("Reynold No. calculation error");
+            self.darcy_friction_factor().expect("Darcy Friction Factor calculation error");
+            self.pressure_drop_100().expect("Pressure Drop calculation error");
+            self.velocity_head().expect("Velocity Head calculation error");
         }
     }
 }
