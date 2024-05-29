@@ -37,6 +37,10 @@ pub mod single_phase_line {
             }
         }
 
+        pub fn set_id(&mut self, newid: f64) {
+            self.id = newid;
+        }
+
 
         fn velocity(&mut self) -> Result<f64, &'static str> {
             let ret: Result<f64, &'static str>;
